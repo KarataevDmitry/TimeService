@@ -15,7 +15,7 @@ namespace TimeServiceApp.Services
             switch (format)
             {
                 case TimeFormat.UTC:
-                    return time.ToString("u");
+                    return time.ToUniversalTime().ToString();
                 case TimeFormat.Unix:
                     return time.ToUnixTimeSeconds().ToString();
                 case TimeFormat.TimeZoneUTC:
@@ -31,7 +31,7 @@ namespace TimeServiceApp.Services
                         try
                         {
                             var tz = TimeSpan.Parse(timezone);
-                            return time.ToOffset(tz).ToString("HH:mm:ss:zzz");
+                            return time.ToOffset(tz).ToString();
                         }
                         catch (Exception)
                         {
