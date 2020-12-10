@@ -9,7 +9,7 @@ namespace TimeServiceApp.Services
 {
     public class TimeService : ITimeService
     {
-        public string GetTime(TimeFormat format, string timezone)
+        public string GetTime(TimeFormat format, string timeShift)
         {
             var time = DateTimeOffset.Now;
             switch (format)
@@ -20,17 +20,17 @@ namespace TimeServiceApp.Services
                     return time.ToUnixTimeSeconds().ToString();
                 case TimeFormat.TimeZoneUTC:
                     {
-                        if (string.IsNullOrEmpty(timezone))
-                            throw new ArgumentNullException(nameof(timezone));
+                        if (string.IsNullOrEmpty(timeShift))
+                            throw new ArgumentNullException(nameof(timeShift));
 
-                        if (timezone.StartsWith('+'))
+                        if (timeShift.StartsWith('+'))
                         {
-                            timezone = timezone.Remove(0, 1);
+                            timeShift = timeShift.Remove(0, 1);
                         }
 
                         try
                         {
-                            var tz = TimeSpan.Parse(timezone);
+                            var tz = TimeSpan.Parse(timeShift);
                             return time.ToOffset(tz).ToString();
                         }
                         catch (Exception)

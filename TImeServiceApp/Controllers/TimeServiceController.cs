@@ -24,16 +24,23 @@ namespace TimeServiceApp.Controllers
             _timeService = timeService; 
         }
         /// <summary>
-        /// Получение времени
+        /// Get Time in 3 modes:
+        /// 1.UTC - UTC +0;
+        /// 2.Unix time - seconds passes from  01/01/1970 
+        /// 3. UTC + TimeShift
         /// </summary>
-        /// <param name="format">Формат времени, допустимые значения (UTC, TimeZoneUTC, Unix)</param>
-        /// <param name="timezone">Временная зона (смещение) для параметра фомата TimeZoneUTC</param>
-        /// <returns>Время в различных форматах</returns>
+        /// <param name="format">Time format for client. One of (UTC, TimeZoneUTC, Unix)</param>
+        /// <param name="timeShift">Time shift (difference UTC), used for TimeZoneUTC </param>
+        /// <returns>String with Date/Time for different formats</returns>
+        [ProducesResponseType(typeof(string), 200)]
+        [ProducesResponseType(typeof(BadRequestResult), 400)]
         [HttpGet]
         [Route("gettime")]
-        public string Get([FromQuery]TimeFormat format, [FromQuery]string timezone)
+        public IActionResult Get([FromQuery] TimeFormat format, [FromQuery] string timeShift)
         {
-            return _timeService.GetTime(format, timezone);
+            _logger.LogInformation("Request recieved");
+            var res = _timeService.GetTime(format, timeShift);
+            return res == null ? BadRequest(res) : Ok(res);
         }
     }
 }
